@@ -1,0 +1,30 @@
+# --- Backend (C# / .NET) ---
+bin/
+obj/
+# ไฟล์เก็บการตั้งค่าเฉพาะตัวของ Visual Studio
+.vs/
+*.user
+*.suo
+# ไฟล์ฐานข้อมูลชั่วคราว
+*.db-shm
+*.db-wal
+
+# --- Frontend (Angular) ---
+# Dependencies
+node_modules/
+# โฟลเดอร์ Cache ของ Angular (สำคัญมาก)
+.angular/
+# โฟลเดอร์ที่ได้จากการ Build Angular
+dist/
+# ไฟล์ Log ต่างๆ
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# --- Security & Misc ---
+# ไฟล์เก็บความลับ เช่น Connection String หรือ API Key
+.env
+.env.*
+# ไฟล์ของระบบปฏิบัติการ
+.DS_Store
+Thumbs.db
