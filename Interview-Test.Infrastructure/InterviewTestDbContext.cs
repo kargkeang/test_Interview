@@ -19,12 +19,30 @@ public class InterviewTestDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // 1. ความสัมพันธ์ User <-> UserRoleMapping (Many-to-Many bridge)
         modelBuilder.Entity<UserRoleMappingModel>(entity =>
         {
+            // กำหนด Composite Key สำหรับ Table กลาง
+            entity.HasKey(urm => new { urm.UserId, urm.RoleId });
+
             entity.HasOne(urm => urm.User)
                   .WithMany(u => u.UserRoleMappings)
-                  .HasForeignKey("UserId")
-                  .HasPrincipalKey(u => u.Id)
+                  .HasForeignKey(urm => urm.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(urm => urm.Role)
+                  .WithMany(r => r.UserRoleMappings)
+                  .HasForeignKey(urm => urm.RoleId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // 2. ความสัมพันธ์ Role -> Permission (One-to-Many)
+        modelBuilder.Entity<PermissionModel>(entity =>
+        {
+            entity.HasOne(p => p.Role)
+                  .WithMany(r => r.Permissions)
+                  .HasForeignKey("RoleId") // อ้างอิง Shadow Property หรือ ForeignKey ใน Model
                   .OnDelete(DeleteBehavior.Cascade);
         });
     }
@@ -34,7 +52,9 @@ public class InterviewTestDbContextDesignFactory : IDesignTimeDbContextFactory<I
 {
     public InterviewTestDbContext CreateDbContext(string[] args)
     {
-        string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=InterviewTestDb;Trusted_Connection=True;";
+        // หมายเหตุ: ในการใช้งานจริงควรดึงจาก configuration
+        string connectionString = "Server=(localdb)\\mssqllocaldb;Database=InterviewTestDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+        
         var optionsBuilder = new DbContextOptionsBuilder<InterviewTestDbContext>()
             .UseSqlServer(connectionString, opts => opts.CommandTimeout(600));
 

@@ -1,11 +1,14 @@
 using Interview_Test.Infrastructure;
 using Interview_Test.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using Interview_Test.Repositories.Interfaces; 
+using Interview_Test.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
